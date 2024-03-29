@@ -4,7 +4,8 @@ import api from "../services/axios/axios";
 const customerSelectors = {
   getAllCustomers: (state) => state.customers.getAllCustomers,
   addNewCustomer: (state) => state.customers.addNewCustomer,
-  editCustomer:(state)=>state.customers.editCustomer,
+  editCustomer: (state) => state.customers.editCustomer,
+  loginCustomer: (state) => state.customers.loginCustomer,
 };
 
 const getAllCustomers = createAsyncThunk(
@@ -25,10 +26,20 @@ const addNewCustomer = createAsyncThunk(
   }
 );
 
+const loginCustomer = createAsyncThunk(
+  "post/customers/login",
+  async (customerData) => {
+    console.log(customerData, "customer data to be logged in")
+    const localToken = localStorage.getItem('token');
+    const response = await api.customers.customerLogin(customerData, localToken)
+    return response
+  }
+)
+
 const editCustomer = createAsyncThunk(
   "post/customers/edit",
   async (customerData) => {
-    console.log(customerData,"=====cusomer data from edit reducer....");
+    console.log(customerData, "=====cusomer data from edit reducer....");
     const localToken = localStorage.getItem('token');
     const response = await api.customers.editCustomer(customerData, localToken);
     return response;
@@ -36,6 +47,7 @@ const editCustomer = createAsyncThunk(
 );
 
 const initialState = {
+  customerToken: "",
   getAllCustomers: {
     loading: false,
     data: {},
@@ -50,13 +62,26 @@ const initialState = {
     loading: false,
     data: {},
     error: "",
+  },
+  loginCustomer: {
+    loading: false,
+    data: {},
+    error: "",
   }
 };
 
 const customersSlice = createSlice({
   name: "customers",
   initialState,
-  reducers: {},
+  reducers: {
+    setCustomerToken: (state, action) => {
+      state.customerToken = action.payload
+    },
+    clearCustomerToken: (state) => {
+      state.token = null;
+      window !== "undefined" ? window.localStorage.removeItem("customerToken") : null;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(getAllCustomers.pending, (state) => {
@@ -93,7 +118,25 @@ const customersSlice = createSlice({
       })
       .addCase(editCustomer.rejected, (state, { error }) => {
         state.editCustomer.loading = false;
-        state.editCustomer.error = error.message;
+        state.editCustomer.error = error.details;
+      })
+      .addCase(loginCustomer.pending, (state) => {
+        state.loginCustomer.loading = true;
+        state.loginCustomer.error = initialState.loginCustomer.error;
+      })
+      .addCase(loginCustomer.fulfilled, (state, { payload }) => {
+        state.loginCustomer.loading = false;
+        state.loginCustomer.data = payload?.data;
+        console.log(payload, "----------payload-------------");
+        state.customerToken = payload?.data?.access_token;
+        window !== "undefined"
+          ? window.localStorage.setItem("customerToken", payload?.data?.access_token)
+          : null;
+      })
+      .addCase(loginCustomer.rejected, (state, { error }) => {
+        state.loginCustomer.loading = false;
+        console.log(error, "--------------error--------------------");
+        state.loginCustomer.error = error.detail;
       })
   },
 });
@@ -102,6 +145,6 @@ export const {
   /* Add any additional actions if needed */
 } = customersSlice.actions;
 
-export { getAllCustomers, addNewCustomer, customerSelectors, editCustomer };
+export { getAllCustomers, addNewCustomer, customerSelectors, editCustomer, loginCustomer };
 
 export default customersSlice.reducer;

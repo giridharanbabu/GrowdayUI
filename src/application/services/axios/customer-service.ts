@@ -19,6 +19,13 @@ const customerService = {
         token: `Bearer ${token}`,
       },
     }),
+
+  customerLogin: (param: any, token: string) =>
+    axios.post(`${baseURL}/customer/login`, param, {
+      headers: {
+        token: `Bearer ${token}`,
+      },
+    }),
 };
 
 export default customerService;
