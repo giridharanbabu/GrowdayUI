@@ -5,14 +5,14 @@ import {
   addNewCustomer,
   getAllCustomers,
   customerSelectors,
-  editCustomer
+  editCustomer,
 } from "@/application/reducers/customer-reducer";
 import { useDispatch, useSelector } from "react-redux";
 import AddCustomerPopup from "@/components/popups/AddCustomerPopup";
 import Loader from "@/components/loaders/Loader";
 
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import {
   businessSelectors,
   getBusinesses,
@@ -20,12 +20,32 @@ import {
 
 const CustomerDetailsPage = () => {
   const dispatch = useDispatch();
-  const { data: getCustomers, loading: getCustomersLoading, error: getCustomersError } = useSelector(customerSelectors.getAllCustomers);
-  const { data: newCustomerData, loading: newCustomerLoading, error: newCustomerError } = useSelector(customerSelectors.addNewCustomer);
-  const { data: getBusinessData, loading: getBusinessLoading, error: getBusinessError } = useSelector(businessSelectors.getBusinesses);
-  const { data: getCutomerEdit, loading: getCutomerEditLoading, error: getCutomerEditError } = useSelector(customerSelectors.editCustomer)
+  const {
+    data: getCustomers,
+    loading: getCustomersLoading,
+    error: getCustomersError,
+  } = useSelector(customerSelectors.getAllCustomers);
+  const {
+    data: newCustomerData,
+    loading: newCustomerLoading,
+    error: newCustomerError,
+  } = useSelector(customerSelectors.addNewCustomer);
+  const {
+    data: getBusinessData,
+    loading: getBusinessLoading,
+    error: getBusinessError,
+  } = useSelector(businessSelectors.getBusinesses);
+  const {
+    data: getCutomerEdit,
+    loading: getCutomerEditLoading,
+    error: getCutomerEditError,
+  } = useSelector(customerSelectors.editCustomer);
 
-  const [editedCustomer, setEditedCustomer] = useState({ name: '', email: '', phone: '' });
+  const [editedCustomer, setEditedCustomer] = useState({
+    name: "",
+    email: "",
+    phone: "",
+  });
 
   const [customers, setCustomers] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -35,9 +55,9 @@ const CustomerDetailsPage = () => {
   const [isAddCustomerPopupOpen, setAddCustomerPopupOpen] = useState(false);
 
   useEffect(() => {
-    dispatch(getAllCustomers())
+    dispatch(getAllCustomers());
     dispatch(getBusinesses());
-  }, [dispatch])
+  }, [dispatch]);
 
   useEffect(() => {
     setCustomers(getCustomers);
@@ -45,19 +65,24 @@ const CustomerDetailsPage = () => {
 
   useEffect(() => {
     if (getCustomersError) {
-      toast.error('Error fetching customers');
+      toast.error("Error fetching customers");
     }
     if (newCustomerError) {
-      toast.error('Error adding new customer');
+      toast.error("Error adding new customer");
     }
   }, [getCustomersError, newCustomerError, newCustomerData]);
 
-
   const handleEdit = (customerId) => {
     setEditingCustomer(customerId);
-    const customer = getCustomers.find(customer => customer._id.$oid === customerId);
+    const customer = getCustomers.find(
+      (customer) => customer._id.$oid === customerId
+    );
     if (customer) {
-      setEditedCustomer({ name: customer.name, email: customer.email, phone: customer.phone });
+      setEditedCustomer({
+        name: customer.name,
+        email: customer.email,
+        phone: customer.phone,
+      });
     }
   };
 
@@ -75,14 +100,11 @@ const CustomerDetailsPage = () => {
     // Implement delete logic here
   };
 
-
-
-
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setEditedCustomer(prevState => ({
+    setEditedCustomer((prevState) => ({
       ...prevState,
-      [name]: value
+      [name]: value,
     }));
   };
 
@@ -103,11 +125,10 @@ const CustomerDetailsPage = () => {
 
   return (
     <div className=" border-black p-10 rounded h-full">
-
       <ToastContainer position="top-right" />
       <div className="flex flex-row pb-4 mb-5 ">
         <div>
-          <h1 className="text-xl font-bold">All customers data</h1>
+          <h1 className="text-xl font-bold">All Customers data</h1>
           <h1 className="font-extralight text-sm text-gray-500">
             See all your customers here!
             {newCustomerError}
@@ -131,94 +152,102 @@ const CustomerDetailsPage = () => {
         </div>
       ) : (
         <div>
-          <table className="w-full">
-            <thead>
-              <tr className="border-b">
-                <th className="text-left py-2">Customer Name</th>
-                <th className="text-left py-2">Email</th>
-                <th className="text-left py-2">Created Date</th>
-                <th className="text-left py-2">Phone</th>
-                <th className="text-left py-2">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {Array.isArray(getCustomers) && getCustomers.map((customer) => (
-                <tr key={customer._id.$oid} className="border-b">
-                  <td className="text-left py-2">
-                    {editingCustomer === customer._id.$oid ? (
-                      <input
-                        type="text"
-                        name="name"
-                        value={editedCustomer.name}
-                        onChange={handleInputChange}
-                      />
-                    ) : (
-                      customer.name
-                    )}
-                  </td>
-                  <td className="text-left py-2">
-
-                    {customer.email}
-
-                  </td>
-                  <td className="text-left py-2">
-                    {new Date(customer.created_at.$date).toLocaleDateString()}
-                  </td>
-                  <td className="text-left py-2">
-                    {editingCustomer === customer._id.$oid ? (
-                      <input
-                        type="text"
-                        name="phone"
-                        value={editedCustomer.phone}
-                        onChange={handleInputChange}
-                      />
-                    ) : (
-                      customer.phone
-                    )}
-                  </td>
-                  <td className="text-left py-2">
-                    {editingCustomer === customer._id.$oid ? (
-                      <div>
-                        <button
-                          className="text-green-500 mr-2"
-                          onClick={handleSaveEdit}
-                        >
-                          Save
-                        </button>
-                        <button
-                          className="text-gray-500"
-                          onClick={handleCancelEdit}
-                        >
-                          Cancel
-                        </button>
-                      </div>
-                    ) : (
-                      <div>
-                        <button
-                          className="text-blue-500 mr-2"
-                          onClick={() => handleEdit(customer._id.$oid)}
-                        >
-                          <Edit size={20} />
-                        </button>
-                        <button
-                          className="text-red-500"
-                          onClick={() => handleDelete(customer._id.$oid)}
-                        >
-                          <Trash size={20} />
-                        </button>
-                      </div>
-                    )}
-                  </td>
+          {getBusinessData.length > 0 ? (
+            <table className="w-full">
+              <thead>
+                <tr className="border-b">
+                  <th className="text-left py-2">Customer Name</th>
+                  <th className="text-left py-2">Email</th>
+                  <th className="text-left py-2">Created Date</th>
+                  <th className="text-left py-2">Phone</th>
+                  <th className="text-left py-2">Actions</th>
                 </tr>
-              ))}
-            </tbody>
-
-
-          </table>
-
+              </thead>
+              <tbody>
+                {Array.isArray(getCustomers) &&
+                  getCustomers.map((customer) => (
+                    <tr key={customer._id.$oid} className="border-b">
+                      <td className="text-left py-2">
+                        {editingCustomer === customer._id.$oid ? (
+                          <input
+                            type="text"
+                            name="name"
+                            value={editedCustomer.name}
+                            onChange={handleInputChange}
+                          />
+                        ) : (
+                          customer.name
+                        )}
+                      </td>
+                      <td className="text-left py-2">{customer.email}</td>
+                      <td className="text-left py-2">
+                        {new Date(
+                          customer.created_at.$date
+                        ).toLocaleDateString()}
+                      </td>
+                      <td className="text-left py-2">
+                        {editingCustomer === customer._id.$oid ? (
+                          <input
+                            type="text"
+                            name="phone"
+                            value={editedCustomer.phone}
+                            onChange={handleInputChange}
+                          />
+                        ) : (
+                          customer.phone
+                        )}
+                      </td>
+                      <td className="text-left py-2">
+                        {editingCustomer === customer._id.$oid ? (
+                          <div>
+                            <button
+                              className="text-green-500 mr-2"
+                              onClick={handleSaveEdit}
+                            >
+                              Save
+                            </button>
+                            <button
+                              className="text-gray-500"
+                              onClick={handleCancelEdit}
+                            >
+                              Cancel
+                            </button>
+                          </div>
+                        ) : (
+                          <div>
+                            <button
+                              className="text-blue-500 mr-2"
+                              onClick={() => handleEdit(customer._id.$oid)}
+                            >
+                              <Edit size={20} />
+                            </button>
+                            <button
+                              className="text-red-500"
+                              onClick={() => handleDelete(customer._id.$oid)}
+                            >
+                              <Trash size={20} />
+                            </button>
+                          </div>
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+              </tbody>
+            </table>
+          ) : (
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                height: "55vh",
+              }}
+            >
+              No data available
+            </div>
+          )}
         </div>
       )}
-
 
       {/* Pagination */}
       <div className="flex justify-center items-center mt-4">
@@ -228,8 +257,9 @@ const CustomerDetailsPage = () => {
             <button
               key={index}
               onClick={() => paginate(index + 1)}
-              className={`px-3 py-2 mx-1 bg-palatteTeritary text-white rounded ${index + 1 === currentPage ? "bg-opacity-80" : ""
-                }`}
+              className={`px-3 py-2 mx-1 bg-palatteTeritary text-white rounded ${
+                index + 1 === currentPage ? "bg-opacity-80" : ""
+              }`}
             >
               {index + 1}
             </button>
@@ -243,7 +273,6 @@ const CustomerDetailsPage = () => {
         onSave={handleAddCustomerSave}
         businesses={getBusinessData} // Pass businesses data
       />
-
     </div>
   );
 };

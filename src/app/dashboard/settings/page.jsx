@@ -11,11 +11,7 @@ import { useEffect, useState } from "react";
 import { getActivityIcon } from "@/components/ui/ActivityLog";
 import { useDispatch, useSelector } from "react-redux";
 
-import {
-  getUser, 
-  userSelectors
-} from "@/application/reducers/user-reducer";
-
+import { getUser, userSelectors } from "@/application/reducers/user-reducer";
 
 const profile = {
   name: "Charlotte Bell",
@@ -26,17 +22,20 @@ const profile = {
   businesses: [{ name: "ABC Company" }, { name: "XYZ Corporation" }],
 };
 
-
 const Page = () => {
   const dispatch = useDispatch();
-  const { data:getUserData, loading:getUserLoading, error:getUserError}=useSelector(userSelectors.getUser)
+  const {
+    data: getUserData,
+    loading: getUserLoading,
+    error: getUserError,
+  } = useSelector(userSelectors.getUser);
 
   useEffect(() => {
     console.log("callig ");
     dispatch(getUser());
   }, [dispatch]);
 
-console.log(getUserData,"user data here---");
+  console.log(getUserData, "user data here---");
 
   const [activeTab, setActiveTab] = useState("Activity"); // State to manage active tab
   const [mounted, setMounted] = useState(false); // State to track component mounting
@@ -188,9 +187,9 @@ console.log(getUserData,"user data here---");
             </div>
             <div className="flex  font-thin  flex-col">
               {/* <Calendar className="text-gray-500  w-5 h-5 mx-4" /> Joined on{" "} */}
-             <div className="text-xs text-darkborder">
+              <div className="text-xs text-darkborder">
                 Joined on {formatDate(getUserData.created_at)}
-             </div>
+              </div>
               <div className="flex text-xs  text-darkborder flex-row font-thin ">
                 {getUserData.email}
               </div>

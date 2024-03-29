@@ -7,7 +7,7 @@ const customerService = {
     axios.post(`${baseURL}/customer/register`, param),
 
   getCutomers: (token: string) =>
-    axios.get(`${baseURL}/<collection_name>/list?collection_name=customers`, {
+    axios.get(`${baseURL}/list?collection_name=customers`, {
       headers: {
         token: `Bearer ${token}`,
       },

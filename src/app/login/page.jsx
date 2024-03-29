@@ -26,6 +26,7 @@ const Page = () => {
   const { loading: loginLoading } = useSelector(authSelectors.loginCall);
   // show  or hide password handler
   const [showPassword, setShowPassword] = useState(false);
+  const [Login, setLogin] = useState(false);
   const handleTogglePassword = () => {
     setShowPassword(!showPassword);
   };
@@ -36,64 +37,24 @@ const Page = () => {
   // const tokenLocal = localStorage.getItem("token")
 
   useEffect(() => {
-    const tokenLocal =
-      typeof window !== "undefined"
-        ? window.localStorage.getItem("token")
-        : null;
-    if (tokenLocal) {
-      router.replace("/dashboard");
+    if (Login && !loginLoading) {
+      const tokenLocal =
+        typeof window !== "undefined"
+          ? window.localStorage.getItem("token")
+          : null;
+      if (tokenLocal) {
+        router.replace("/dashboard");
+      }
     }
-  }, [router]);
-
-  // form submit
-  // const formSubmit = async (Data: LoginFormData) => {
-  //     try {
-  //         setLoading(true); // Set loading to true while waiting for the API response
-  //         console.log("Submitting form with data:", Data);
-  //         const response: any = await LoginFn(Data);
-  //         let tokenString = response.data.token.toString();
-  //         console.log("API response:", response);
-  //         console.log("Token:", tokenString);
-  //         dispatch(addUser(response.data.token));
-  //         dispatch(addtoken(tokenString));
-  //         localStorage.setItem('Token', tokenString);
-  //         router.push('/dashboard');
-  //         console.log("--------------------------");
-  //     } catch (error) {
-  //         console.error("Error during form submission:", error);
-  //         setErrorMessage("An error occurred during login."); // Set an error message if login fails
-  //     } finally {
-  //         setLoading(false); // Set loading back to false after API response is received
-  //     }
-  // };
-
-  useEffect(() => {
-    const tokenLocal =
-      typeof window !== "undefined"
-        ? window.localStorage.getItem("token")
-        : null;
-    if (tokenLocal) {
-      router.replace("/dashboard");
-    }
-  }, [router]);
-
-  // Color code from palette (left to right)
-  // #2a3950
-  // #55283c
-  // #dae2ef
-  // #e4d1c3
-  // #c0cfca
+  }, [router, Login, loginLoading]);
 
   const formSubmit = async (e) => {
     const payload = {
       email: e.username,
       password: e.password,
     };
-    // const payload = {
-    //   email: "giri@togethercorporation.com",
-    //   password: "mongouser",
-    // };
     dispatch(saveLogin(payload));
+    setLogin(true);
   };
 
   return (

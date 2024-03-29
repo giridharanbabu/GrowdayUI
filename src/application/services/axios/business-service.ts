@@ -11,7 +11,7 @@ const businessService = {
     }),
 
   getBusinesses: (param: any, token: string) =>
-    axios.get(`${baseURL}/<collection_name>/list?collection_name=business`, {
+    axios.get(`${baseURL}/list?collection_name=business`, {
       headers: {
         token: `Bearer ${token}`,
       },
@@ -30,14 +30,13 @@ const businessService = {
         token: `Bearer ${token}`,
       },
     }),
-  
+
   getBusinessByID: (businessId: string, token: string) =>
     axios.get(`${baseURL}/business/${businessId}`, {
       headers: {
         token: `Bearer ${token}`,
       },
     }),
-  
 };
 
 export default businessService;

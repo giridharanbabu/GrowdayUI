@@ -2,25 +2,27 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import api from "../services/axios/axios";
 
 const memberSelectors = {
-  fetchMember: (state) => state.members.fetchMember,
+  fetchMember: (state) => state.members.getMember,
   registerMember: (state) => state.members.registerMember,
   editMember: (state) => state.members.editMember,
 };
 
-const fetchMember = createAsyncThunk("get/members", async (param, { getState }) => {
-  const token = getState()?.auth.token;
-  const localtoken = localStorage.getItem("token");
-  const response = await api.members.fetchMember(param, localtoken);
-  console.log(response, "response");
-  return response;
-});
+const fetchMember = createAsyncThunk(
+  "get/members",
+  async (param, { getState }) => {
+    const token = getState()?.auth.token;
+    const localtoken = localStorage.getItem("token");
+    const response = await api.members.fetchMember(param, localtoken);
+    return response;
+  }
+);
 
 const registerMember = createAsyncThunk(
   "post/member",
   async (memberData, { getState }) => {
     const token = getState()?.auth.token;
     const localtoken = localStorage.getItem("token");
-    const response = await api.members.saveMember(memberData, localtoken);
+    const response = await api.members.registerMember(memberData, localtoken);
     return response;
   }
 );
@@ -36,7 +38,7 @@ const editMember = createAsyncThunk(
 );
 
 const initialState = {
-  fetchMember: {
+  getMember: {
     loading: false,
     data: [],
     error: "",
@@ -60,20 +62,20 @@ const membersSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(fetchMember.pending, (state) => {
-        state.fetchMember.loading = true;
-        state.fetchMember.error = initialState.error;
+        state.getMember.loading = true;
+        state.getMember.error = initialState.getMember.error;
       })
       .addCase(fetchMember.fulfilled, (state, { payload }) => {
-        state.fetchMember.loading = false;
-        state.fetchMember.data = payload?.data;
+        state.getMember.loading = false;
+        state.getMember.data = payload?.data;
       })
       .addCase(fetchMember.rejected, (state, { error }) => {
-        state.fetchMember.loading = false;
-        state.fetchMember.error = error.message;
+        state.getMember.loading = false;
+        state.getMember.error = error.message;
       })
       .addCase(registerMember.pending, (state) => {
         state.registerMember.loading = true;
-        state.registerMember.error = initialState.error;
+        state.registerMember.error = initialState.registerMember.error;
       })
       .addCase(registerMember.fulfilled, (state, { payload }) => {
         state.registerMember.loading = false;
@@ -85,7 +87,7 @@ const membersSlice = createSlice({
       })
       .addCase(editMember.pending, (state) => {
         state.editMember.loading = true;
-        state.editMember.error = initialState.error;
+        state.editMember.error = initialState.editMember.error;
       })
       .addCase(editMember.fulfilled, (state, { payload }) => {
         state.editMember.loading = false;

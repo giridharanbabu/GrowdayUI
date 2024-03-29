@@ -59,14 +59,14 @@ const sidebarItmes = [
     label: "Members",
     href: "/dashboard/settings/members",
   },
-  {
-    icon: {
-      icon: <UserRoundCogIcon />,
-      fillIcon: <UserRoundCogIcon />,
-    },
-    label: "Settings ",
-    href: "/dashboard/settings",
-  },
+  // {
+  //   icon: {
+  //     icon: <UserRoundCogIcon />,
+  //     fillIcon: <UserRoundCogIcon />,
+  //   },
+  //   label: "Settings ",
+  //   href: "/dashboard/settings",
+  // },
 ];
 
 export default function Sidebar() {

@@ -12,10 +12,16 @@ import {
   saveBusiness,
 } from "@/application/reducers/business-reducer";
 
-const BusinessPage = ({ }) => {
+const BusinessPage = ({}) => {
   const dispatch = useDispatch();
-  const { data: getBusinessData, loading: getBusinessLoading, error: getBusinessError } = useSelector(businessSelectors.getBusinesses);
-  const { loading: getAddBusinessLoading } = useSelector(businessSelectors.saveBusiness)
+  const {
+    data: getBusinessData,
+    loading: getBusinessLoading,
+    error: getBusinessError,
+  } = useSelector(businessSelectors.getBusinesses);
+  const { loading: getAddBusinessLoading } = useSelector(
+    businessSelectors.saveBusiness
+  );
   const [loadedBusinesses, setLoadedBusinesses] = useState([]);
   const [isAddBusinessPopupOpen, setAddBusinessPopupOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
@@ -69,7 +75,6 @@ const BusinessPage = ({ }) => {
     return matchesSearch && matchesFilter;
   });
 
-
   return (
     <div className="h-full">
       <div className="flex flex-col md:flex-row  border-b dark:border dark:border-darkborder">
@@ -98,8 +103,8 @@ const BusinessPage = ({ }) => {
               {filterActive === true
                 ? "Active"
                 : filterActive === false
-                  ? "Inactive"
-                  : "All"}
+                ? "Inactive"
+                : "All"}
             </button>
             {isFilterDropdownOpen && (
               <div className="absolute  bg-white border rounded-md shadow-md mt-1">
@@ -174,7 +179,6 @@ const BusinessPage = ({ }) => {
                     onStatusToggle={handleActivateDeactivate}
                   />
                 </div>
-
               ))}
             </div>
           ) : (
@@ -184,9 +188,9 @@ const BusinessPage = ({ }) => {
               </h2>
               <button
                 onClick={handleAddBusinessClick}
-                className=" bg-palatteTeritary text-white px-4 py-2 rounded"
+                className="bg-addNewBtn text-white px-4 py-2 rounded"
               >
-                New Business
+                Create New Business
               </button>
             </div>
           )}
