@@ -110,7 +110,7 @@ const Page = () => {
                     <input
                       placeholder={LoginPageContents.usernameLable}
                       type="text"
-                      id="username"
+                      id="email"
                       className="text-[14px] bg-gray-50 dark:bg-darkbg border-lightborder dark:border-darkborder border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-200"
                       {...register("username")}
                     />

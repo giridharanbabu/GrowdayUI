@@ -3,10 +3,12 @@ import api from "../services/axios/axios";
 
 const commonSelectors = {
   isSideBarOpen: (state) => state.common.sideBar,
+  isModalOpen: (state) => state.common.isModalOpen,
 };
 
 const initialState = {
   sideBar: true,
+  isModalOpen: false,
 };
 
 export const commonSlice = createSlice({
@@ -15,6 +17,9 @@ export const commonSlice = createSlice({
   reducers: {
     updateSideBar: (state, action) => {
       state.sideBar = action.payload;
+    },
+    updateModal: (state, action) => {
+      state.isModalOpen = action.payload;
     },
   },
   //   extraReducers: {},

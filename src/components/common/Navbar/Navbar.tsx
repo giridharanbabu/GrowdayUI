@@ -13,7 +13,7 @@ import {
   commonSelectors,
 } from "@/application/reducers/common-reducer";
 import { RiArrowLeftDoubleFill } from "react-icons/ri";
-import { Settings, UserRoundCogIcon } from "lucide-react";
+import { Settings, UserRoundCogIcon, Bell } from "lucide-react";
 import { authActions } from "@/application/reducers/auth-reducer";
 import { useRouter } from "next/navigation";
 
@@ -58,7 +58,7 @@ const Navbar = () => {
   return (
     <div>
       <div className="bg-lightbg dark:bg-darkbg border-b border-lightborder dark:border-darkborder shadow-sm">
-        <div className="max-w-screen flex items-center justify-between mx-auto px-[2%] py-[1px]">
+        <div className="max-w-screen flex items-center justify-between mx-auto px-1 py-[1px]">
           <div className="flex flex-row ">
             <section
               onClick={() => dispatch(updateSideBar(!isSideBarOpen))}
@@ -90,6 +90,12 @@ const Navbar = () => {
           <div className="flex items-center">
             {/* Theme switcher */}
             <ThemeSwitcher />
+            <div
+              title="Go to Profile"
+              className="border-[1px] p-2 m-2 bg-lightbg dark:bg-darkbg border-b border-lightborder dark:border-darkborder flex items-center rounded-lg"
+            >
+              <Bell size={20} className=" w-4 h-4" />
+            </div>
             <Link href="/dashboard/settings" className="flex  cursor-pointer ">
               <div
                 title="Go to Profile"

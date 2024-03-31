@@ -8,9 +8,15 @@ import {
   editMember,
   memberSelectors,
 } from "@/application/reducers/member-reducer";
+import EmptyData from "../../empty-data";
+import CommonModal from "../../../../components/common/dialog-box/dialog-box";
 import Link from "next/link";
 import { useDispatch, useSelector } from "react-redux";
 import AllBusinessLoader from "@/components/loaders/Loader";
+import {
+  commonActions,
+  commonSelectors,
+} from "@/application/reducers/common-reducer";
 
 // interface Member {
 //   id: any;
@@ -23,6 +29,8 @@ import AllBusinessLoader from "@/components/loaders/Loader";
 const MembersPage = ({ params }) => {
   const dispatch = useDispatch();
   //const memberState = useSelector((state) => state.member);
+  const { updateModal } = commonActions;
+  const isModalOpen = useSelector(commonSelectors.isModalOpen);
   const {
     loading: getMemberLoading,
     error: getMemberError,
@@ -42,11 +50,10 @@ const MembersPage = ({ params }) => {
   const [deletions, setDeletions] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedUser, setSelectedUser] = useState(null);
-  const [isAddMemberPopupOpen, setAddMemberPopupOpen] = useState(false);
   const [newMember, setNewMember] = useState({
     name: "",
     email: "",
-    role: "",
+    role: null,
     business: "",
   });
   const [editingUser, setEditingUser] = useState(null);
@@ -154,12 +161,12 @@ const MembersPage = ({ params }) => {
   };
 
   const handleAddMemberClick = () => {
-    setAddMemberPopupOpen(true);
+    dispatch(updateModal(true));
   };
 
   const handleAddMemberClose = () => {
-    setAddMemberPopupOpen(false);
-    setNewMember({ name: "", email: "", role: "", business: "" });
+    dispatch(updateModal(false));
+    setNewMember({ name: "", email: "", role: null, business: "" });
   };
 
   const handleAddMemberSave = async () => {
@@ -174,11 +181,7 @@ const MembersPage = ({ params }) => {
       role: selectedRole,
       ...newMember,
     };
-    console.log(selectedRole);
     dispatch(registerMember(payload));
-    // Reset the newMember state
-    setNewMember({ name: "", email: "", role: "", business: "" });
-    // Close the "Add Member" popup
     handleAddMemberClose();
   };
 
@@ -193,6 +196,22 @@ const MembersPage = ({ params }) => {
     setSelectedRole(event.target.value);
     setNewMember({ ...newMember, role: selectedRole });
   };
+
+  const handleOnchangeModal = (e, label) => {
+    if (label === "role") {
+      setNewMember({
+        ...newMember,
+        role: e,
+      });
+    } else {
+      const { name, value } = e.target;
+      setNewMember({
+        ...newMember,
+        [name]: value,
+      });
+    }
+  };
+
   return (
     <div className="ml-16 mt-6 border-black p-4 rounded">
       <>
@@ -205,15 +224,17 @@ const MembersPage = ({ params }) => {
             <h1 className="font-bold text-2xl mb-1">Members Details</h1>
           </div>
           <div>
-            <button
-              className="flex items-center bg-addNewBtn text-white px-4 py-2 rounded"
-              onClick={handleAddMemberClick}
-            >
-              <span className="mr-2">Create New Member</span>
-            </button>
+            {getMemberData.length > 0 && (
+              <button
+                className="flex items-center bg-addNewBtn text-white px-4 py-2 rounded"
+                onClick={handleAddMemberClick}
+              >
+                <span className="mr-2">Create New Member</span>
+              </button>
+            )}
           </div>
         </div>
-        <div className="flex items-center mb-4">
+        {/* <div className="flex items-center mb-4">
           <input
             type="text"
             placeholder="Search users"
@@ -222,103 +243,27 @@ const MembersPage = ({ params }) => {
             className="border p-2 rounded mr-2"
           />
           <Search size={20} className="ml-2" />
-        </div>
+        </div> */}
 
         {/* Add Member Popup */}
-        {isAddMemberPopupOpen && (
-          <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center">
-            <div className="bg-white dark:bg-darkbg p-20 rounded-md">
-              <h2 className="text-lg font-bold mb-4">Create New Member</h2>
-              <label className="block mb-2">
-                Username:
-                <input
-                  type="text"
-                  value={newMember.name}
-                  onChange={(e) =>
-                    setNewMember({ ...newMember, name: e.target.value })
-                  }
-                  className="border p-2 rounded w-full"
-                />
-              </label>
-              <label className="block mb-2">
-                Email:
-                <input
-                  type="text"
-                  value={newMember.email}
-                  onChange={(e) =>
-                    setNewMember({ ...newMember, email: e.target.value })
-                  }
-                  className="border p-2 rounded w-full"
-                />
-              </label>
-              <label className="block mb-4">
-                Business:
-                <input
-                  type="text"
-                  value={newMember.business}
-                  onChange={(e) =>
-                    setNewMember({ ...newMember, business: e.target.value })
-                  }
-                  className="border p-2 rounded w-full"
-                />
-              </label>
-              {/* <label className="block mb-4">
-                Role:
-                <input
-                  type="text"
-                  value={newMember.role}
-                  onChange={(e) =>
-                    setNewMember({ ...newMember, role: e.target.value })
-                  }
-                  className="border p-2 rounded w-full"
-                />
-              </label> */}
-
-              <label htmlFor="selectedRole" className="block mb-4">
-                Role:
-                <select
-                  id="selectedRole"
-                  value={newMember.role}
-                  onChange={(e) =>
-                    setNewMember({ ...newMember, role: e.target.value })
-                  }
-                  style={{
-                    padding: "5px",
-                    borderRadius: "5px",
-                    border: "1px solid #ccc",
-                  }}
-                  className="border p-2 rounded w-full"
-                >
-                  <option value="">Select a role</option>
-                  <option value="user">User</option>
-                  <option value="admin">Admin</option>
-                </select>
-              </label>
-
-              <div className="flex justify-end">
-                <button
-                  className="bg-blue-500 text-white px-4 py-2 rounded mr-2"
-                  onClick={handleAddMemberSave}
-                >
-                  Save
-                </button>
-                <button
-                  className="bg-gray-300 text-black px-4 py-2 rounded"
-                  onClick={handleAddMemberClose}
-                >
-                  Cancel
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
+        {/* {isModalOpen && ( */}
+        <CommonModal
+          title="Create New Member"
+          component="member"
+          isOpen={isModalOpen}
+          value={newMember}
+          onClose={handleAddMemberClose}
+          onSubmit={handleAddMemberSave}
+          onChange={handleOnchangeModal}
+        />
+        {/* )} */}
 
         {getMemberData.length > 0 ? (
           <table className="w-full">
             <thead>
               <tr className="border-b">
-                <th className="text-left py-2">Username</th>
-                <th className="text-left py-2">User Email</th>
+                <th className="text-left py-2">Name</th>
+                <th className="text-left py-2">Email</th>
                 <th className="text-left py-2">Business</th>
                 <th className="text-left py-2">Role</th>
                 <th className="text-left py-2">Actions</th>
@@ -493,16 +438,11 @@ const MembersPage = ({ params }) => {
             </tbody>
           </table>
         ) : (
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              height: "55vh",
-            }}
-          >
-            No data available
-          </div>
+          <EmptyData
+            title="Member"
+            onClick={handleAddMemberClick}
+            // disable={!getBusinessData.length}
+          />
         )}
 
         {/* User table */}

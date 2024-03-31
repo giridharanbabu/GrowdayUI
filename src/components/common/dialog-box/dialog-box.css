@@ -1,0 +1,11 @@
+.ant-btn-primary {
+    background: #1677ff;
+  }
+
+  .ant-input::placeholder {
+    color: rgba(0, 0, 0, 0.625);
+  }
+
+  .ant-select-selection-placeholder{
+    color: rgba(0, 0, 0, 0.625) !important;
+  }

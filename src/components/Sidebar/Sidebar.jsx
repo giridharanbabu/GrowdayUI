@@ -5,7 +5,6 @@ import Link from "next/link";
 import React, { useState } from "react";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 import { usePathname } from "next/navigation";
-
 // icons
 import { RiArrowLeftDoubleFill } from "react-icons/ri";
 import { SideNavItemType } from "@/utils/types/sidebarTypes";
@@ -128,8 +127,8 @@ export default function Sidebar() {
 
       <div className="px-5  ">
         {sidebarItmes.map((d, i) => (
-          <HoverContainer key={i}>
-            <div className="p-[5%] ">
+          <HoverContainer key={i} href={d.href}>
+            <div className=" my-2">
               <SideNavItem
                 icon={d.icon}
                 href={d.href}
@@ -149,7 +148,7 @@ const SideNavItem = ({ href, isSideBarOpen, icon, label }) => {
   const pathname = usePathname();
   const isActivePage = pathname == href;
   return (
-    <div className="flex p-2">
+    <div className="flex py-2">
       <Link ref={animationParent} href={href} className="flex  cursor-pointer ">
         {/* icon */}
         <div className="flex items-center justify-center w-[20px] h-[20px] text-2xl ">
@@ -173,10 +172,10 @@ const SideNavItem = ({ href, isSideBarOpen, icon, label }) => {
   );
 };
 
-const HoverContainer = ({ children, className }) => {
+const HoverContainer = ({ children, className, href }) => {
   return (
     <div className="pl-[8px] transition-all rounded-md cursor-pointer hover:bg-palatteTeritary text-sm font-normal dark:hover:bg-zinc-900 group-hover:dark:bg-zinc-900">
-      {children}
+      <Link href={href}>{children}</Link>
     </div>
   );
 };

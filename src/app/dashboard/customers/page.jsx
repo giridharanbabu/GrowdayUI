@@ -7,6 +7,7 @@ import {
   customerSelectors,
   editCustomer,
 } from "@/application/reducers/customer-reducer";
+import EmptyData from "./../empty-data";
 import { useDispatch, useSelector } from "react-redux";
 import AddCustomerPopup from "@/components/popups/AddCustomerPopup";
 import Loader from "@/components/loaders/Loader";
@@ -17,9 +18,16 @@ import {
   businessSelectors,
   getBusinesses,
 } from "@/application/reducers/business-reducer";
+import CommonModal from "@/components/common/dialog-box/dialog-box";
+import {
+  commonActions,
+  commonSelectors,
+} from "@/application/reducers/common-reducer";
 
 const CustomerDetailsPage = () => {
   const dispatch = useDispatch();
+  const isModalOpen = useSelector(commonSelectors.isModalOpen);
+  const { updateModal } = commonActions;
   const {
     data: getCustomers,
     loading: getCustomersLoading,
@@ -46,18 +54,28 @@ const CustomerDetailsPage = () => {
     email: "",
     phone: "",
   });
-
+  const [newCustomer, setNewCustomer] = useState({
+    name: "",
+    email: "",
+    password: "",
+    phone: "",
+    business_ids: null, // Specify the type explicitly as string
+    created_at: new Date().toISOString(),
+  });
   const [customers, setCustomers] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [editingCustomer, setEditingCustomer] = useState(null);
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
-  const [isAddCustomerPopupOpen, setAddCustomerPopupOpen] = useState(false);
 
   useEffect(() => {
     dispatch(getAllCustomers());
     dispatch(getBusinesses());
   }, [dispatch]);
+
+  useEffect(() => {
+    dispatch(getAllCustomers());
+  }, [!newCustomerLoading, !getCutomerEditLoading]);
 
   useEffect(() => {
     setCustomers(getCustomers);
@@ -109,18 +127,45 @@ const CustomerDetailsPage = () => {
   };
 
   const handleAddCustomerClick = () => {
-    setAddCustomerPopupOpen(true);
+    dispatch(updateModal(true));
   };
 
   const handleAddCustomerClose = () => {
-    setAddCustomerPopupOpen(false);
+    dispatch(updateModal(false));
+    setNewCustomer({
+      name: "",
+      email: "",
+      password: "",
+      phone: "",
+      business_ids: null, // Specify the type explicitly as string
+      created_at: new Date().toISOString(),
+    });
   };
 
-  const handleAddCustomerSave = async (newCustomer) => {
-    dispatch(addNewCustomer(newCustomer));
+  const handleAddCustomerSave = async () => {
+    const businessIdsAsString = Array.isArray(newCustomer.business_ids)
+      ? newCustomer.business_ids.join(", ")
+      : newCustomer.business_ids;
+    dispatch(
+      addNewCustomer({ ...newCustomer, business_ids: businessIdsAsString })
+    );
     handleAddCustomerClose();
-    console.log(newCustomer, "new customer here");
     dispatch(getAllCustomers());
+  };
+
+  const handleOnchangeModal = (e, label) => {
+    if (label === "business") {
+      setNewCustomer({
+        ...newCustomer,
+        business_ids: e,
+      });
+    } else {
+      const { name, value } = e.target;
+      setNewCustomer({
+        ...newCustomer,
+        [name]: value,
+      });
+    }
   };
 
   return (
@@ -131,18 +176,18 @@ const CustomerDetailsPage = () => {
           <h1 className="text-xl font-bold">All Customers data</h1>
           <h1 className="font-extralight text-sm text-gray-500">
             See all your customers here!
-            {newCustomerError}
           </h1>
         </div>
-
-        <div className="self-end  ml-auto ">
-          <button
-            className="flex items-center bg-addNewBtn text-white px-4 py-2 rounded"
-            onClick={handleAddCustomerClick}
-          >
-            <span className="mr-2">Create New Customer</span>
-          </button>
-        </div>
+        {getCustomers.length > 0 && (
+          <div className="self-end  ml-auto ">
+            <button
+              className="flex items-center bg-addNewBtn text-white px-4 py-2 rounded"
+              onClick={handleAddCustomerClick}
+            >
+              <span className="mr-2">Create New Customer</span>
+            </button>
+          </div>
+        )}
       </div>
 
       {getCustomersLoading || getBusinessLoading ? (
@@ -152,7 +197,7 @@ const CustomerDetailsPage = () => {
         </div>
       ) : (
         <div>
-          {getBusinessData.length > 0 ? (
+          {getCustomers.length > 0 ? (
             <table className="w-full">
               <thead>
                 <tr className="border-b">
@@ -216,17 +261,17 @@ const CustomerDetailsPage = () => {
                         ) : (
                           <div>
                             <button
-                              className="text-blue-500 mr-2"
+                              // className="text-blue-500 mr-2"
                               onClick={() => handleEdit(customer._id.$oid)}
                             >
-                              <Edit size={20} />
+                              <Edit size={14} />
                             </button>
-                            <button
+                            {/* <button
                               className="text-red-500"
                               onClick={() => handleDelete(customer._id.$oid)}
                             >
                               <Trash size={20} />
-                            </button>
+                            </button> */}
                           </div>
                         )}
                       </td>
@@ -235,16 +280,22 @@ const CustomerDetailsPage = () => {
               </tbody>
             </table>
           ) : (
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                height: "55vh",
-              }}
-            >
-              No data available
-            </div>
+            <EmptyData
+              title="Customer"
+              onClick={handleAddCustomerClick}
+              disable={!getBusinessData.length}
+            />
+
+            // <div
+            //   style={{
+            //     display: "flex",
+            //     justifyContent: "center",
+            //     alignItems: "center",
+            //     height: "55vh",
+            //   }}
+            // >
+            //   No data available
+            // </div>
           )}
         </div>
       )}
@@ -267,12 +318,22 @@ const CustomerDetailsPage = () => {
         )}
       </div>
 
-      <AddCustomerPopup
+      <CommonModal
+        title="Create New Customer"
+        component="customer"
+        isOpen={isModalOpen}
+        value={newCustomer}
+        onClose={handleAddCustomerClose}
+        onSubmit={handleAddCustomerSave}
+        onChange={handleOnchangeModal}
+      />
+
+      {/* <AddCustomerPopup
         isOpen={isAddCustomerPopupOpen}
         onClose={handleAddCustomerClose}
         onSave={handleAddCustomerSave}
         businesses={getBusinessData} // Pass businesses data
-      />
+      /> */}
     </div>
   );
 };

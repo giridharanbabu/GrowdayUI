@@ -1,11 +1,26 @@
 "use client";
-import { authSelectors, verifyEmail } from "@/application/reducers/auth-reducer";
-import React, { useState, ChangeEvent, FormEvent, useRef, useEffect } from "react";
+import {
+  authSelectors,
+  verifyEmail,
+} from "@/application/reducers/auth-reducer";
+import { useRouter } from "next/navigation";
+import React, {
+  useState,
+  ChangeEvent,
+  FormEvent,
+  useRef,
+  useEffect,
+} from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-const OTPVerificationForm= () => {
+const OTPVerificationForm = () => {
   const dispatch = useDispatch();
-  const {loading : isLoading,data:verifyData, error: isError} = useSelector(authSelectors.verifyEmail)
+  const router = useRouter();
+  const {
+    loading: isLoading,
+    data: verifyData,
+    error: isError,
+  } = useSelector(authSelectors.verifyEmail);
   const [otp, setOTP] = useState(Array(6).fill("")); // Initialize with an array of 6 empty strings
   const lastInputRef = useRef(null);
 
@@ -19,27 +34,24 @@ const OTPVerificationForm= () => {
     // Move focus to the next input field if a number is entered
     if (value.length === 1 && index < otp.length - 1) {
       const nextIndex = index + 1;
-      const nextInput = document.getElementById(
-        `otp-input-${nextIndex}`
-      ) ;
+      const nextInput = document.getElementById(`otp-input-${nextIndex}`);
       if (nextInput) {
         nextInput.focus();
       }
     }
   };
 
-useEffect(() => {
-if (!isLoading && verifyData.status === 'success') {
-  window.location.href = '/dashboard';
-}
-}, [verifyData,,isLoading])
-
+  useEffect(() => {
+    if (!isLoading && verifyData.status === "success") {
+      router.replace("/dashboard");
+    }
+  }, [verifyData, , isLoading, router]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     // Simulate OTP validation (hardcoded OTP: "123456")
     const enteredOTP = otp.join("");
-    dispatch(verifyEmail(enteredOTP))
+    dispatch(verifyEmail(enteredOTP));
     // if (enteredOTP === '123456') {
     // Redirect to dashboard
     // window.location.href = '/dashboard';
@@ -66,8 +78,12 @@ if (!isLoading && verifyData.status === 'success') {
         ))}
       </div>
 
-      <button type="submit" disabled={isLoading} className="transform transition-transform duration-300 ease-in-out hover:scale-105 bg-palatteSecondary rounded-md px-5 py-2 text-gray-50 font-light text-base mt-5">
-        { isLoading ? 'Submitting...' : 'Submit'} 
+      <button
+        type="submit"
+        disabled={isLoading}
+        className="transform transition-transform duration-300 ease-in-out hover:scale-105 bg-palatteSecondary rounded-md px-5 py-2 text-gray-50 font-light text-base mt-5"
+      >
+        {isLoading ? "Submitting..." : "Submit"}
       </button>
     </form>
   );

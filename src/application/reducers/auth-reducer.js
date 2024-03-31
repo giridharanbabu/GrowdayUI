@@ -99,6 +99,9 @@ export const authSlice = createSlice({
       .addCase(verifyEmail.fulfilled, (state, { payload }) => {
         state.verifyEmail.loading = false;
         state.verifyEmail.data = payload?.data;
+        window !== "undefined"
+          ? window.localStorage.setItem("token", payload?.data?.access_token)
+          : null;
       })
       .addCase(verifyEmail.rejected, (state, { error }) => {
         state.verifyEmail.loading = false;
