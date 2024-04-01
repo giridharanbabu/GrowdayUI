@@ -103,7 +103,8 @@ const BusinessPage = ({}) => {
 
   return (
     <div className="h-full">
-      <div className="flex flex-col md:flex-row  border-b dark:border dark:border-darkborder">
+      <div className="flex flex-col md:flex-row  ">
+        {/* <div className="flex flex-col md:flex-row  border-b dark:border dark:border-darkborder"> */}
         {/* <div className="flex flex-row items-center px-5">
           <div className="">
             <Search />

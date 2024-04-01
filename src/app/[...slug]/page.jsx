@@ -83,24 +83,29 @@ const Page = ({ params }) => {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
   const handleLogin = () => {
     // Create an object with email and password
     const credentials = {
       email: email,
       password: password,
+      business_id: currentBusiness && currentBusiness._id && currentBusiness._id.$oid
     };
 
     console.log(credentials, "credentials here-----");
 
     // Dispatch action with email and password as a single object
-    dispatch(loginCustomer(credentials));
-    setCustomer(true);
-    if (customerLoginError) {
-      toast.error(customerLoginError);
-    } else if (loggedInCustomerData) {
-      toast.success("Login Success..");
+    dispatch(loginCustomer(credentials))
+    if (Object.keys(loggedInCustomerData).length > 0) {
+      toast.success("Login sucess")
+    } else if (customerLoginError) {
+      toast.error("Login Error")
     }
   };
+
+
+  console.log(loggedInCustomerData, "login customer data ---------------");
+  console.log(customerLoginError, "customer login error------------");
 
   const [name, setName] = useState("");
   const [signupEmail, setSingupEmail] = useState("");
@@ -127,15 +132,25 @@ const Page = ({ params }) => {
   };
 
   useEffect(() => {
+    console.log(getAllBusiness, "------get all business");
+    console.log(URL, "----URL");
     if (Array.isArray(getAllBusiness) && URL) {
       const matchingBusiness = getAllBusiness.find(
-        (business) => business.business_url.split("/")[1] === URL
+        (business) => {
+          // Remove spaces from business name and convert to lowercase
+          const modifiedBusinessName = business.name.replace(/\s/g, '').toLowerCase();
+          // Convert URL to lowercase
+          const modifiedURL = URL.toLowerCase();
+          return modifiedBusinessName === modifiedURL;
+        }
       );
+      console.log(matchingBusiness, "matching---business");
       if (matchingBusiness) {
         setCurrentBusiness(matchingBusiness);
       }
     }
   }, [getAllBusiness, URL]);
+
 
   return (
     <>
@@ -150,7 +165,7 @@ const Page = ({ params }) => {
             </div>
 
             <div className="flex flex-row select-none items-center space-x-2 pr-5 text-lightbg dark:text-darktext">
-              {customer && hasMounted ? (
+              {Object.keys(loggedInCustomerData).length > 0 && hasMounted ? (
                 <div>
                   <button
                     onClick={handleLogout}

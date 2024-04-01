@@ -168,8 +168,8 @@ const EditPage = () => {
                     Business URL
                   </label>
                   <Input
-                    name="business_type"
-                    id="business_type"
+                    name="business_url"
+                    id="business_url"
                     size="large"
                     value={formData.business_url}
                     onChange={handleChange}

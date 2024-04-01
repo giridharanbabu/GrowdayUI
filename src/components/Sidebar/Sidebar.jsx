@@ -128,12 +128,12 @@ export default function Sidebar() {
       <div className="px-5  ">
         {sidebarItmes.map((d, i) => (
           <HoverContainer key={i} href={d.href}>
-            <div className=" my-2">
+            <div className=" my-2 ">
               <SideNavItem
-                icon={d.icon}
-                href={d.href}
+                icon={d?.icon}
+                href={d?.href}
                 isSideBarOpen={isSideBarOpen}
-                label={d.label}
+                label={d?.label}
               />
             </div>
           </HoverContainer>
@@ -146,21 +146,29 @@ export default function Sidebar() {
 const SideNavItem = ({ href, isSideBarOpen, icon, label }) => {
   const [animationParent] = useAutoAnimate();
   const pathname = usePathname();
-  const isActivePage = pathname == href;
+  const isActivePage = pathname === href;
+  console.log("isActivePage", isActivePage);
   return (
-    <div className="flex py-2">
-      <Link ref={animationParent} href={href} className="flex  cursor-pointer ">
-        {/* icon */}
-        <div className="flex items-center justify-center w-[20px] h-[20px] text-2xl ">
+    <div
+      className={cn(
+        "flex py-2 justify-between",
+        isActivePage && "font-semibold bg-palatteTeritary rounded-md"
+      )}
+    >
+      <Link
+        ref={animationParent}
+        href={href}
+        className="flex  cursor-pointer px-2 "
+      >
+        <div className="flex items-center justify-center w-[20px] h-[20px] text-2xl  ">
           {isActivePage ? icon?.fillIcon : icon?.icon}
         </div>
-        {/* label */}
         <div className="flex items-center">
           {isSideBarOpen && (
             <p
               className={cn(
-                "text-md hidden font-normal md:block pr-[10px] ml-[15px] transition-all ",
-                isActivePage && "font-semibold"
+                "text-md hidden font-normal md:block ml-[15px] transition-all ",
+                isActivePage && "font-semibold "
               )}
             >
               {label}
@@ -174,7 +182,7 @@ const SideNavItem = ({ href, isSideBarOpen, icon, label }) => {
 
 const HoverContainer = ({ children, className, href }) => {
   return (
-    <div className="pl-[8px] transition-all rounded-md cursor-pointer hover:bg-palatteTeritary text-sm font-normal dark:hover:bg-zinc-900 group-hover:dark:bg-zinc-900">
+    <div className=" transition-all rounded-md cursor-pointer hover:bg-palatteTeritary text-sm font-normal dark:hover:bg-zinc-900 group-hover:dark:bg-zinc-900">
       <Link href={href}>{children}</Link>
     </div>
   );
