@@ -64,7 +64,7 @@ const CustomerDetailsPage = () => {
   });
   const [customers, setCustomers] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [itemsPerPage, setItemsPerPage] = useState(20);
   const [editingCustomer, setEditingCustomer] = useState(null);
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
@@ -280,10 +280,10 @@ const CustomerDetailsPage = () => {
               </tbody>
             </table>
           ) : (
+
             <EmptyData
               title="Customer"
               onClick={handleAddCustomerClick}
-              disable={!getBusinessData.length}
             />
 
             // <div
@@ -301,22 +301,21 @@ const CustomerDetailsPage = () => {
       )}
 
       {/* Pagination */}
-      <div className="flex justify-center items-center mt-4">
+      {/* <div className="flex justify-center items-center mt-4">
         {Array.from(
           { length: Math.ceil(customers.length / itemsPerPage) },
           (_, index) => (
             <button
               key={index}
               onClick={() => paginate(index + 1)}
-              className={`px-3 py-2 mx-1 bg-palatteTeritary text-white rounded ${
-                index + 1 === currentPage ? "bg-opacity-80" : ""
-              }`}
+              className={`px-3 py-2 mx-1 bg-palatteTeritary text-white rounded ${index + 1 === currentPage ? "bg-opacity-80" : ""
+                }`}
             >
               {index + 1}
             </button>
           )
         )}
-      </div>
+      </div> */}
 
       <CommonModal
         title="Create New Customer"

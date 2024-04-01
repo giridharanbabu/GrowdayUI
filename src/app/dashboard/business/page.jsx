@@ -18,7 +18,7 @@ import {
   commonSelectors,
 } from "@/application/reducers/common-reducer";
 
-const BusinessPage = ({}) => {
+const BusinessPage = ({ }) => {
   const dispatch = useDispatch();
   const isModalOpen = useSelector(commonSelectors.isModalOpen);
   const { updateModal } = commonActions;
@@ -103,11 +103,11 @@ const BusinessPage = ({}) => {
 
   return (
     <div className="h-full">
-    {/* the search bar here */}
+      {/* the search bar here */}
 
-      <div className="flex flex-col md:flex-row pb-[1%] p-5 mx-5">
+      <div className="flex flex-col md:flex-row pb-[1%] p-10 ">
         <div className="self-center">
-          <h1 className="font-black text-xl">All Businesses</h1>
+          <h1 className="font-bold text-xl">All Businesses</h1>
           <h1 className="font-extralight text-sm text-gray-500">
             See all your businesses here!
           </h1>
