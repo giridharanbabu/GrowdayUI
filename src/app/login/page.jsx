@@ -23,7 +23,7 @@ const Page = () => {
   const { errors, handleSubmit, register } = useValidate();
   const [errorrMessage, setErrorMessage] = useState("");
   const token = useSelector(authSelectors.authToken);
-  const { loading: loginLoading } = useSelector(authSelectors.loginCall);
+  const { loading: loginLoading , error:loginError} = useSelector(authSelectors.loginCall);
   // show  or hide password handler
   const [showPassword, setShowPassword] = useState(false);
   const [Login, setLogin] = useState(false);
@@ -59,7 +59,7 @@ const Page = () => {
 
   return (
     <section className="bg-lightbg dark:bg-darkbg ">
-      <FormError errors={errors} />
+      <FormError errors={loginError} />
       {errorrMessage && (
         <ErrorComponent data={{ path: "login", Message: errorrMessage }} />
       )}

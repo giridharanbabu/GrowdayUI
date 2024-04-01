@@ -81,6 +81,8 @@ const EditPage = () => {
       });
   };
 
+  console.log(formData, "form data-0---");
+
   useEffect(() => {
     if (editBusinessError) {
       toast.error("Error adding new customer");
@@ -171,7 +173,7 @@ const EditPage = () => {
                     name="business_url"
                     id="business_url"
                     size="large"
-                    value={formData.business_url}
+                    value={formData.domain_url}
                     onChange={handleChange}
                     placeholder="Enter Name"
                   />

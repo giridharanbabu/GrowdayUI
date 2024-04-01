@@ -103,61 +103,7 @@ const BusinessPage = ({}) => {
 
   return (
     <div className="h-full">
-      <div className="flex flex-col md:flex-row  ">
-        {/* <div className="flex flex-col md:flex-row  border-b dark:border dark:border-darkborder"> */}
-        {/* <div className="flex flex-row items-center px-5">
-          <div className="">
-            <Search />
-          </div>
-          <input
-            type="text"
-            placeholder="Search businesses..."
-            value={searchTerm}
-            onChange={handleSearchChange}
-            className="px-2 py-1 bg-transparent  focus:outline-none focus:border-primary "
-          />
-        </div> */}
-        <div className="self-center md:self-end my-5 ml-auto flex items-center">
-          {/* <div className="flex flex-row items-center px-5">
-            <Filter /> <span className="font-bold pl-1 py-2">Filter</span>
-          </div> */}
-          {/* <div className="px-5">
-            <button
-              onClick={() => setFilterDropdownOpen(!isFilterDropdownOpen)}
-              className={`bg-transparent flex flex-row items-center text-black px-4 py-2 rounded ml-2`}
-            >
-              <ChevronDown />{" "}
-              {filterActive === true
-                ? "Active"
-                : filterActive === false
-                ? "Inactive"
-                : "All"}
-            </button>
-            {isFilterDropdownOpen && (
-              <div className="absolute  bg-white border rounded-md shadow-md mt-1">
-                <button
-                  onClick={() => handleFilterChange(true)}
-                  className="block px-4 py-2 w-full text-left"
-                >
-                  Active
-                </button>
-                <button
-                  onClick={() => handleFilterChange(false)}
-                  className="block px-4 py-2 w-full text-left"
-                >
-                  Inactive
-                </button>
-                <button
-                  onClick={() => handleFilterChange(null)}
-                  className="block px-4 py-2 w-full text-left"
-                >
-                  All
-                </button>
-              </div>
-            )}
-          </div> */}
-        </div>
-      </div>
+    {/* the search bar here */}
 
       <div className="flex flex-col md:flex-row pb-[1%] p-5 mx-5">
         <div className="self-center">

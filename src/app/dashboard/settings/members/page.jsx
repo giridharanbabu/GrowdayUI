@@ -213,7 +213,7 @@ const MembersPage = ({ params }) => {
   };
 
   return (
-    <div className="ml-16 mt-6 border-black p-4 rounded">
+    <div className="  border-black p-10 rounded">
       <>
         {(getMemberLoading || registerMemberLoading || editMemberLoading) && (
           <AllBusinessLoader />
@@ -221,7 +221,10 @@ const MembersPage = ({ params }) => {
 
         <div className="flex justify-between items-center mb-4">
           <div>
-            <h1 className="font-bold text-2xl mb-1">Members Details</h1>
+            <h1 className="font-bold text-xl mb-1">All Members</h1>
+            <h1 className="font-extralight text-sm text-gray-500">
+              See all your members here!
+            </h1>
           </div>
           <div>
             {getMemberData.length > 0 && (
@@ -441,7 +444,7 @@ const MembersPage = ({ params }) => {
           <EmptyData
             title="Member"
             onClick={handleAddMemberClick}
-            // disable={!getBusinessData.length}
+          // disable={!getBusinessData.length}
           />
         )}
 

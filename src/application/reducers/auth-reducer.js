@@ -9,6 +9,7 @@ const authSelectors = {
 };
 
 const saveLogin = createAsyncThunk("post/login/details", async (param) => {
+  console.log(param, "calling from save login");
   const response = await api.auth.saveLogin(param);
   return response;
 });

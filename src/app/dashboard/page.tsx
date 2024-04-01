@@ -4,6 +4,7 @@ import AllBusinessCount from "@/components/cards/dashboard/allBusinessCount";
 import AllCustomerCount from "@/components/cards/dashboard/allCustomerCount";
 import IncomeTotal from "@/components/cards/dashboard/incomeTotal";
 import { Card, Input } from "antd";
+import Link from "next/link";
 
 // all the contents are dummy for now, need to integrate API
 const Dashboard: React.FC = () => {
@@ -35,8 +36,12 @@ const Dashboard: React.FC = () => {
           <br />
           <br />
           <span>
-            You just made a good decision! start creating your buisness,
-            customers, members.
+            You just made a good decision! start creating your
+            <Link className="text-blue-500" href={'/dashboard/business'}> buisness,</Link>
+            <Link className="text-blue-500" href={'/dashboard/customers'}> customers,</Link>
+            <Link className="text-blue-500" href={'/dashboard/settings/members'}> members.</Link>
+
+
           </span>
           <br />
           <br />

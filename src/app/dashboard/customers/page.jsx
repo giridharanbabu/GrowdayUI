@@ -173,7 +173,7 @@ const CustomerDetailsPage = () => {
       <ToastContainer position="top-right" />
       <div className="flex flex-row pb-4 mb-5 ">
         <div>
-          <h1 className="text-xl font-bold">All Customers data</h1>
+          <h1 className="text-xl font-bold">All Customers</h1>
           <h1 className="font-extralight text-sm text-gray-500">
             See all your customers here!
           </h1>

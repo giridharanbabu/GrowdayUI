@@ -22,11 +22,16 @@ import {
 const useHasMounted = () => {
   const [hasMounted, setHasMounted] = useState(false);
 
+  const setMounted = (value) => {
+    setHasMounted(value);
+  };
+
   useEffect(() => {
     setHasMounted(true);
+    return () => setHasMounted(false); // Reset the state when unmounting
   }, []);
 
-  return hasMounted;
+  return [hasMounted, setMounted];
 };
 
 const Page = ({ params }) => {
@@ -85,17 +90,14 @@ const Page = ({ params }) => {
   const [password, setPassword] = useState("");
 
   const handleLogin = () => {
-    // Create an object with email and password
     const credentials = {
       email: email,
       password: password,
       business_id: currentBusiness && currentBusiness._id && currentBusiness._id.$oid
     };
-
-    console.log(credentials, "credentials here-----");
-
     // Dispatch action with email and password as a single object
     dispatch(loginCustomer(credentials))
+    setCustomer(loggedInCustomerData)
     if (Object.keys(loggedInCustomerData).length > 0) {
       toast.success("Login sucess")
     } else if (customerLoginError) {
@@ -104,8 +106,6 @@ const Page = ({ params }) => {
   };
 
 
-  console.log(loggedInCustomerData, "login customer data ---------------");
-  console.log(customerLoginError, "customer login error------------");
 
   const [name, setName] = useState("");
   const [signupEmail, setSingupEmail] = useState("");
@@ -132,8 +132,6 @@ const Page = ({ params }) => {
   };
 
   useEffect(() => {
-    console.log(getAllBusiness, "------get all business");
-    console.log(URL, "----URL");
     if (Array.isArray(getAllBusiness) && URL) {
       const matchingBusiness = getAllBusiness.find(
         (business) => {
@@ -144,7 +142,6 @@ const Page = ({ params }) => {
           return modifiedBusinessName === modifiedURL;
         }
       );
-      console.log(matchingBusiness, "matching---business");
       if (matchingBusiness) {
         setCurrentBusiness(matchingBusiness);
       }
@@ -165,8 +162,16 @@ const Page = ({ params }) => {
             </div>
 
             <div className="flex flex-row select-none items-center space-x-2 pr-5 text-lightbg dark:text-darktext">
-              {Object.keys(loggedInCustomerData).length > 0 && hasMounted ? (
-                <div>
+              {Object.keys(loggedInCustomerData).length > 0 && hasMounted && customer ? (
+                <div className="flex flex-row gap-5 justify-center items-center">
+
+                  <div className="text-gray-500">
+                    <div className="flex flex-col">
+                      <div className="text-[10px]">Logged in as</div>
+                      <div>{loggedInCustomerData.user}</div>
+                    </div>
+
+                  </div>
                   <button
                     onClick={handleLogout}
                     className="text-violet11 shadow-blackA4 hover:bg-mauve3 inline-flex h-[35px] items-center justify-center rounded-[4px] bg-palettePrimary px-[15px] font-medium leading-none shadow-[0_2px_10px] focus:shadow-[0_0_0_2px] focus:shadow-black focus:outline-none"

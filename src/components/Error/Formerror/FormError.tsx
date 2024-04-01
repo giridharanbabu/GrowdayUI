@@ -35,7 +35,7 @@ const FormError = (props: propsType) => {
             <span className="sr-only">Danger</span>
             <div>
               <span className="font-medium">
-                Ensure that these requirements are met:
+                User not registered or incorrect email/password.
               </span>
               <ul className="mt-1.5 ml-4 list-disc list-inside">
                 {filteredArray.map((item, index) => (
